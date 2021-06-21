@@ -1,5 +1,6 @@
 package org.johoco.depinsight.nexus;
 
+import org.johoco.depinsight.nexus.dto.AssetsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -24,9 +25,10 @@ public class NexusExtractApp {
 
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
+		
 		return args -> {
-			 Art  quote = restTemplate.getForObject(
-					"https://quoters.apps.pcfone.io/api/random", ArtifactDTO.class);
+			AssetsDTO quote = restTemplate.getForObject(
+					"http://localhost:8081/service/rest/v1/assets?repository=maven-releases", AssetsDTO.class);
 			log.info(quote.toString());
 		};
 	}

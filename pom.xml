@@ -20,6 +20,7 @@
 		<jodatime.version>2.10.10</jodatime.version>
 		<lombok.version>1.18.20</lombok.version>
 		<depinsightdto.version>0.0.1-SNAPSHOT</depinsightdto.version>
+		<maven-resolver.version>1.7.1</maven-resolver.version>
 	</properties>
 
 	<dependencyManagement>
@@ -39,12 +40,19 @@
 				<artifactId>joda-time</artifactId>
 				<version>${jodatime.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.apache.maven.resolver</groupId>
+				<artifactId>maven-resolver-api</artifactId>
+				<version>${maven-resolver.version}</version>
+			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.johoco.dependency-insight-api</groupId>
+			<artifactId>dependency-insight-api-dto</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -54,9 +62,10 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 		</dependency>
+
 		<dependency>
-			<groupId>org.johoco.dependency-insight-api</groupId>
-			<artifactId>dependency-insight-api-dto</artifactId>
+			<groupId>org.apache.maven.resolver</groupId>
+			<artifactId>maven-resolver-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
