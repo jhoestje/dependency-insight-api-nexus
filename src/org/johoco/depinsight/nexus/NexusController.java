@@ -41,9 +41,9 @@ public class NexusController {
 		LOG.info(quote.toString());
 		
 		
-		Pom quote = restTemplate.getForObject(
-				"http://localhost:8081/service/rest/v1/assets?repository=maven-releases", AssetsDTO.class);
-		LOG.info(quote.toString());
+//		Pom quote = restTemplate.getForObject(
+//				"http://localhost:8081/service/rest/v1/assets?repository=maven-releases", AssetsDTO.class);
+//		LOG.info(quote.toString());
 		
 	}
 }
