@@ -8,7 +8,7 @@ import org.eclipse.aether.collection.DependencyManagement;
 import lombok.Data;
 
 /**
- *
+ * Per https://maven.apache.org/xsd/maven-4.0.0.xsd
  *
  * @author John Hoestje
  */
