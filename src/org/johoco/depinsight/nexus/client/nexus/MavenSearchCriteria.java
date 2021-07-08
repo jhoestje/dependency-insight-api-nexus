@@ -6,12 +6,16 @@ import lombok.Data;
 /**
  * Search values related to Nexus Maven asset searches.
  * 
+ * Have a parent class that has common values for all searches and subclass by type?  nuget, docker, ...
+ * 
+ * Is there parameter precedence?
+ * 
  * @author John Hoestje
  *
  */
 @Data
 @Builder
-public class MavenSearchValues {
+public class MavenSearchCriteria {
 	private String q;
 	private String repository;
 	private String format;
