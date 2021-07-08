@@ -1,6 +1,6 @@
-package org.johoco.depinsight.nexus;
+package org.johoco.depinsight.nexus.controller;
 
-import org.johoco.depinsight.nexus.dto.AssetsDTO;
+import org.johoco.depinsight.dto.AssetsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

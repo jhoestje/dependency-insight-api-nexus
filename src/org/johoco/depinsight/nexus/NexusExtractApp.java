@@ -1,10 +1,7 @@
 package org.johoco.depinsight.nexus;
 
-import org.johoco.depinsight.nexus.dto.AssetDTO;
-import org.johoco.depinsight.nexus.dto.AssetsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -24,21 +21,23 @@ public class NexusExtractApp {
 		return builder.build();
 	}
 
-	@Bean
-	public CommandLineRunner run(RestTemplate restTemplate, PomDownload pomd) throws Exception {
-
-		return args -> {
-			AssetsDTO quote = restTemplate.getForObject(
-					"http://localhost:8081/service/rest/v1/assets?repository=maven-releases", AssetsDTO.class);
-			log.info(quote.toString());
-
-			for (AssetDTO adto : quote.getItems()) {
-				if (adto.getPath().endsWith("pom")) {
-					pomd.sdf(adto);
-				}
-			}
-		};
-	}
+//	@Bean
+//	public CommandLineRunner run(RestTemplate restTemplate, PomDownload pomd) throws Exception {
+//
+//		return args -> {
+//			ComponentsDTO quote = restTemplate.getForObject(
+//					"http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
+//			log.info("Initial getForObject" + quote.toString());
+//
+//			for (ComponentDTO cdto : quote.getItems()) {
+//				for (AssetDTO adto:cdto.getAssets()) {
+//					if (adto.getPath().endsWith("pom")) {
+//						pomd.sdf(adto);
+//					}	
+//				}
+//			}
+//		};
+//	}
 
 //	private void soeomtseotr() {
 //
