@@ -78,6 +78,7 @@ public class PopulateController {
 			for (AssetDTO adto : comp.getAssets()) {
 				if (adto.getPath().endsWith("pom")) {
 					Pom pom = client.download(adto);
+					LOG.info("POM DLd:  " + pom.toString());
 				}
 			}
 		}

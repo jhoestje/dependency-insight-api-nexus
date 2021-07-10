@@ -1,12 +1,10 @@
 package org.johoco.depinsight.nexus.client.nexus;
 
 import org.johoco.depinsight.dto.AssetDTO;
-import org.johoco.depinsight.dto.AssetsDTO;
 import org.johoco.depinsight.dto.ComponentsDTO;
 import org.johoco.depinsight.dto.Pom;
 import org.johoco.depinsight.nexus.client.RepositoryClient;
 import org.johoco.depinsight.nexus.client.nexus.builder.maven.MavenSearchCriteriaBuilder;
-import org.johoco.depinsight.nexus.controller.NexusController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class NexusV1Client implements RepositoryClient {
 
-	private final static Logger LOG = LoggerFactory.getLogger(NexusController.class);
+	private final static Logger LOG = LoggerFactory.getLogger(NexusV1Client.class);
 
 //	@Autowired
 //	private RestTemplateBuilder restTemplateBuilder;
@@ -35,8 +33,6 @@ public class NexusV1Client implements RepositoryClient {
 
 	private String template = "%s%s%s?%s";
 
-	private static final Logger log = LoggerFactory.getLogger(NexusV1Client.class);
-
 	@Autowired
 	public NexusV1Client(final RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -47,9 +43,9 @@ public class NexusV1Client implements RepositoryClient {
 	 */
 	@Override
 	public Pom download(final AssetDTO adto) {
-		log.info(String.format("Going to download and parse %s", adto.getDownloadUrl()));
+		LOG.info(String.format("Going to download and parse %s", adto.getDownloadUrl()));
 		Pom da = restTemplate.getForObject(adto.getDownloadUrl(), Pom.class);
-		log.info("Got the POM do:  " + da.toString());
+		LOG.info("Got the POM do:  " + da.toString());
 		return da;
 	}
 
