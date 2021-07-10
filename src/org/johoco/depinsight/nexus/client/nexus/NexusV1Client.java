@@ -2,6 +2,7 @@ package org.johoco.depinsight.nexus.client.nexus;
 
 import org.johoco.depinsight.dto.AssetDTO;
 import org.johoco.depinsight.dto.AssetsDTO;
+import org.johoco.depinsight.dto.ComponentsDTO;
 import org.johoco.depinsight.dto.Pom;
 import org.johoco.depinsight.nexus.client.RepositoryClient;
 import org.johoco.depinsight.nexus.client.nexus.builder.maven.MavenSearchCriteriaBuilder;
@@ -32,7 +33,7 @@ public class NexusV1Client implements RepositoryClient {
 
 	private String paramSplit = "&";
 
-	private String template = "&s&s&s?&s";
+	private String template = "%s%s%s?%s";
 
 	private static final Logger log = LoggerFactory.getLogger(NexusV1Client.class);
 
@@ -52,15 +53,17 @@ public class NexusV1Client implements RepositoryClient {
 		return da;
 	}
 
-	public AssetsDTO find(final MavenSearchCriteria values) {
+	public ComponentsDTO find(final MavenSearchCriteria values) {
 		MavenSearchCriteriaBuilder vb = new MavenSearchCriteriaBuilder();
 		String queryUrl = vb.searchBuilder(values, paramSplit);
 		String fullUrl = String.format(template, baseUrl, versionUrl, searchUrl, queryUrl);
+		
+		LOG.info("Nexus URL:  " + fullUrl);
 
-		AssetsDTO assets = restTemplate.getForObject(fullUrl, AssetsDTO.class);
-		LOG.info(assets.toString());
+		ComponentsDTO components = restTemplate.getForObject(fullUrl, ComponentsDTO.class);
+		LOG.info(components.toString());
 
-		return null;
+		return components;
 	}
 
 	
