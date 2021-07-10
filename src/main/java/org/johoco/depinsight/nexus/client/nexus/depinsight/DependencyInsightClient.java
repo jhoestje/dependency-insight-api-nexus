@@ -1,13 +1,10 @@
 package org.johoco.depinsight.nexus.client.nexus.depinsight;
 
 import org.johoco.depinsight.dto.AssetDTO;
-import org.johoco.depinsight.dto.AssetsDTO;
 import org.johoco.depinsight.dto.ComponentsDTO;
 import org.johoco.depinsight.dto.Pom;
-import org.johoco.depinsight.nexus.client.RepositoryClient;
 import org.johoco.depinsight.nexus.client.nexus.MavenSearchCriteria;
 import org.johoco.depinsight.nexus.client.nexus.builder.maven.MavenSearchCriteriaBuilder;
-import org.johoco.depinsight.nexus.controller.NexusController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +16,11 @@ public class DependencyInsightClient {
 
 	private final static Logger LOG = LoggerFactory.getLogger(DependencyInsightClient.class);
 
-
 	private RestTemplate restTemplate;
 
 	private String baseUrl = "http://localhost:8081/service/rest";
 	private String versionUrl = "/v1";
 	private String searchUrl = "/search";
-	
-	
-	// search components -> /v1/search
-	//search assests -> /v1/search/assets
 
 	private String paramSplit = "&";
 
@@ -42,7 +34,6 @@ public class DependencyInsightClient {
 	/**
 	 * Download the POM using the downloadURL property.
 	 */
-	@Override
 	public Pom download(final AssetDTO adto) {
 		LOG.info(String.format("Going to download and parse %s", adto.getDownloadUrl()));
 		Pom da = restTemplate.getForObject(adto.getDownloadUrl(), Pom.class);
@@ -54,7 +45,7 @@ public class DependencyInsightClient {
 		MavenSearchCriteriaBuilder vb = new MavenSearchCriteriaBuilder();
 		String queryUrl = vb.searchBuilder(values, paramSplit);
 		String fullUrl = String.format(template, baseUrl, versionUrl, searchUrl, queryUrl);
-		
+
 		LOG.info("Nexus URL:  " + fullUrl);
 
 		ComponentsDTO components = restTemplate.getForObject(fullUrl, ComponentsDTO.class);
@@ -63,5 +54,4 @@ public class DependencyInsightClient {
 		return components;
 	}
 
-	
 }
