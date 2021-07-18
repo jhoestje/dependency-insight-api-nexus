@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.johoco.depinsight.dto.AssetDTO;
 import org.johoco.depinsight.dto.AssetsDTO;
 import org.johoco.depinsight.dto.Pom;
-import org.johoco.depinsight.nexus.client.RepositoryClient;
+import org.johoco.depinsight.nexus.client.ArtifactRepositoryClient;
 import org.johoco.depinsight.nexus.controller.NexusController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class NexusV2Client implements RepositoryClient {
+public class NexusV2Client implements ArtifactRepositoryClient {
 
 	private final static Logger LOG = LoggerFactory.getLogger(NexusController.class);
 

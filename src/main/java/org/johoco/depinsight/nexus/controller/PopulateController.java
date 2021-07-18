@@ -1,13 +1,14 @@
 package org.johoco.depinsight.nexus.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.johoco.depinsight.dto.AssetDTO;
 import org.johoco.depinsight.dto.AssetsDTO;
 import org.johoco.depinsight.dto.ComponentDTO;
 import org.johoco.depinsight.dto.ComponentsDTO;
 import org.johoco.depinsight.dto.Pom;
-import org.johoco.depinsight.nexus.client.RepositoryClient;
 import org.johoco.depinsight.nexus.client.nexus.MavenSearchCriteria;
 import org.johoco.depinsight.nexus.client.nexus.NexusV1Client;
+import org.johoco.depinsight.nexus.client.nexus.depinsight.DependencyInsightClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ public class PopulateController {
 
 	private RestTemplate restTemplate;
 	private NexusV1Client client;
-	// private DepInsight depInsightClient;
+	private DependencyInsightClient depInsightClient;
 
 	@Autowired
-	public PopulateController(final RestTemplate restTemplate, final NexusV1Client client) {
+	public PopulateController(final RestTemplate restTemplate, final NexusV1Client client,
+			final DependencyInsightClient depInsightClient) {
 		this.restTemplate = restTemplate;
 		this.client = client;
+		this.depInsightClient = depInsightClient;
 	}
 
 	// need to fork Apache Nexus resolver and make a local (file) vs remote (in
@@ -47,7 +50,8 @@ public class PopulateController {
 
 	@GetMapping("/shallow")
 	public void populateShallow() {
-		ComponentsDTO quote = restTemplate.getForObject("http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
+		ComponentsDTO quote = restTemplate.getForObject(
+				"http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
 		LOG.info("Initial getForObject" + quote.toString());
 
 		for (ComponentDTO cdto : quote.getItems()) {
@@ -60,14 +64,14 @@ public class PopulateController {
 	}
 
 	@GetMapping("/shallow/language/{lang}/g/{groupId}/a/{artifactId}/v/{version}/p/{packaging}")
-	public void populateShallowByKeyzz(@PathVariable("lang") final String language, @PathVariable("groupId") final String groupId,
-			@PathVariable("artifactId") final String artifactId, @PathVariable("version") final String version,
-			@PathVariable("packaging") final String packaging) {
+	public void populateShallowByKeyzz(@PathVariable("lang") final String language,
+			@PathVariable("groupId") final String groupId, @PathVariable("artifactId") final String artifactId,
+			@PathVariable("version") final String version, @PathVariable("packaging") final String packaging) {
 //		ComponentsDTO quote = restTemplate.getForObject("http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
 //		LOG.info("Initial getForObject" + quote.toString());
 
-		MavenSearchCriteria c = MavenSearchCriteria.builder().groupId(groupId).artifactId(artifactId).version(version).extension(packaging).format("maven2")
-				.build();
+		MavenSearchCriteria c = MavenSearchCriteria.builder().groupId(groupId).artifactId(artifactId).version(version)
+				.extension(packaging).format("maven2").build();
 
 		LOG.info("-----searching.... " + c.toString());
 
@@ -78,17 +82,36 @@ public class PopulateController {
 			for (AssetDTO adto : comp.getAssets()) {
 				if (adto.getPath().endsWith("pom")) {
 					Pom pom = client.download(adto);
+
+					checkForInheritedValues(pom);
+
 					LOG.info("POM DLd:  " + pom.toString());
+					depInsightClient.save(pom);
 				}
 			}
 		}
 
 	}
 
+	/**
+	 * In case values are inherited
+	 * 
+	 * @return
+	 */
+	private void checkForInheritedValues(Pom pom) {
+		if (StringUtils.isBlank(pom.getGroupId()) && pom.getParent() != null) {
+			pom.setGroupId(pom.getParent().getGroupId());
+		}
+		if (StringUtils.isBlank(pom.getVersion()) && pom.getParent() != null) {
+			pom.setVersion(pom.getParent().getVersion());
+		}
+	}
+
 	@GetMapping("/deep")
 	public void populateDeep() {
 
-		AssetsDTO quote = restTemplate.getForObject("http://localhost:8081/service/rest/v1/assets?repository=maven-releases", AssetsDTO.class);
+		AssetsDTO quote = restTemplate.getForObject(
+				"http://localhost:8081/service/rest/v1/assets?repository=maven-releases", AssetsDTO.class);
 		LOG.info(quote.toString());
 
 //		Pom quote = restTemplate.getForObject(
