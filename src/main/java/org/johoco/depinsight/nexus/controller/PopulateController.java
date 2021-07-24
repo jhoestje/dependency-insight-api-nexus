@@ -1,5 +1,7 @@
 package org.johoco.depinsight.nexus.controller;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.johoco.depinsight.dto.AssetDTO;
 import org.johoco.depinsight.dto.AssetsDTO;
@@ -86,6 +88,24 @@ public class PopulateController {
 					checkForInheritedValues(pom);
 
 					LOG.info("POM DLd:  " + pom.toString());
+					depInsightClient.save(pom);
+				}
+			}
+		}
+
+	}
+
+	@GetMapping("/shallow/crawl/{repository}")
+	public void populateShallowCrawl(@PathVariable("repository") final String repository) {
+		List<ComponentDTO> found = client.crawlRepository(repository);
+		LOG.info("Crawling repository {} found {} components", repository, found.size());
+
+		for (ComponentDTO cdto : found) {
+			for (AssetDTO adto : cdto.getAssets()) {
+				if (adto.getPath().endsWith("pom")) {
+					Pom pom = client.download(adto);
+					checkForInheritedValues(pom);
+					LOG.info("POM DLd");
 					depInsightClient.save(pom);
 				}
 			}

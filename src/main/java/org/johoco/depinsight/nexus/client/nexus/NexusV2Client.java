@@ -1,8 +1,11 @@
 package org.johoco.depinsight.nexus.client.nexus;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.johoco.depinsight.dto.AssetDTO;
 import org.johoco.depinsight.dto.AssetsDTO;
+import org.johoco.depinsight.dto.ComponentDTO;
 import org.johoco.depinsight.dto.Pom;
 import org.johoco.depinsight.nexus.client.ArtifactRepositoryClient;
 import org.johoco.depinsight.nexus.controller.NexusController;
@@ -25,10 +28,9 @@ public class NexusV2Client implements ArtifactRepositoryClient {
 	private String baseUrl = "http://localhost:8081/service/rest";
 	private String versionUrl = "/v2";
 	private String searchUrl = "/search";
-	
-	
+
 	// search components -> /api/v2/search/component
-	//search assests -> /v1/search/assets
+	// search assests -> /v1/search/assets
 
 //	private String paramSplit = "&";
 
@@ -69,5 +71,11 @@ public class NexusV2Client implements ArtifactRepositoryClient {
 		}
 
 		return SearchParams.CONAN_BASEVERSION.getParam();
+	}
+
+	@Override
+	public List<ComponentDTO> crawlRepository(String repository) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

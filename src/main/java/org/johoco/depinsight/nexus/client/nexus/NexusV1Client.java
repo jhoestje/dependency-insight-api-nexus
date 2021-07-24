@@ -1,6 +1,9 @@
 package org.johoco.depinsight.nexus.client.nexus;
 
+import java.util.List;
+
 import org.johoco.depinsight.dto.AssetDTO;
+import org.johoco.depinsight.dto.ComponentDTO;
 import org.johoco.depinsight.dto.ComponentsDTO;
 import org.johoco.depinsight.dto.Pom;
 import org.johoco.depinsight.nexus.client.ArtifactRepositoryClient;
@@ -24,10 +27,9 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 	private String baseUrl = "http://localhost:8081/service/rest";
 	private String versionUrl = "/v1";
 	private String searchUrl = "/search";
-	
-	
+
 	// search components -> /v1/search
-	//search assests -> /v1/search/assets
+	// search assests -> /v1/search/assets
 
 	private String paramSplit = "&";
 
@@ -45,7 +47,7 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 	public Pom download(final AssetDTO adto) {
 		LOG.info(String.format("Going to download and parse %s", adto.getDownloadUrl()));
 		Pom da = restTemplate.getForObject(adto.getDownloadUrl(), Pom.class);
-		LOG.info("Got the POM do:  " + da.toString());
+		LOG.info("Got the POM");
 		return da;
 	}
 
@@ -53,7 +55,7 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 		MavenSearchCriteriaBuilder vb = new MavenSearchCriteriaBuilder();
 		String queryUrl = vb.searchBuilder(values, paramSplit);
 		String fullUrl = String.format(template, baseUrl, versionUrl, searchUrl, queryUrl);
-		
+
 		LOG.info("Nexus URL:  " + fullUrl);
 
 		ComponentsDTO components = restTemplate.getForObject(fullUrl, ComponentsDTO.class);
@@ -62,5 +64,21 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 		return components;
 	}
 
-	
+	@Override
+	public List<ComponentDTO> crawlRepository(final String repository) {
+		ComponentsDTO quote = restTemplate.getForObject(
+				"http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
+		LOG.info("Initial getForObject" + quote.toString());
+
+		return quote.getItems();
+
+//		for (ComponentDTO cdto : quote.getItems()) {
+//			for (AssetDTO adto : cdto.getAssets()) {
+//				if (adto.getPath().endsWith("pom")) {
+//					Pom pom = null;// pomDownload.download(adto);
+//				}
+//			}
+//		}
+	}
+
 }
