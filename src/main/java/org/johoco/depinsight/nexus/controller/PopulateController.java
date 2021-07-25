@@ -87,7 +87,7 @@ public class PopulateController {
 
 					checkForInheritedValues(pom);
 
-					LOG.info("POM DLd:  " + pom.toString());
+					LOG.info("POM DLd");
 					depInsightClient.save(pom);
 				}
 			}
