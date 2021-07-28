@@ -92,7 +92,6 @@ public class PopulateController {
 				}
 			}
 		}
-
 	}
 
 	@GetMapping("/shallow/crawl/{repository}")
