@@ -1,11 +1,8 @@
 package org.johoco.depinsight.nexus.client.nexus;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.johoco.depinsight.dto.AssetDTO;
 import org.johoco.depinsight.dto.AssetsDTO;
-import org.johoco.depinsight.dto.ComponentDTO;
 import org.johoco.depinsight.dto.Pom;
 import org.johoco.depinsight.nexus.client.ArtifactRepositoryClient;
 import org.johoco.depinsight.nexus.controller.NexusController;
@@ -74,8 +71,7 @@ public class NexusV2Client implements ArtifactRepositoryClient {
 	}
 
 	@Override
-	public List<ComponentDTO> crawlRepository(String repository) {
+	public void crawlRepository(String repository) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 }
