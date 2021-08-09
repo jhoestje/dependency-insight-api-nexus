@@ -53,7 +53,7 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 	public Pom download(final AssetDTO adto) {
 		LOG.info(String.format("Going to download and parse %s", adto.getDownloadUrl()));
 		Pom da = restTemplate.getForObject(adto.getDownloadUrl(), Pom.class);
-		LOG.info("Got the POM");
+		// LOG.info("Got the POM");
 		return da;
 	}
 
@@ -74,8 +74,8 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 	public void crawlRepository(final String repository) {
 //		ComponentsDTO quote = restTemplate.getForObject(
 //				"http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
-		ComponentsDTO components = restTemplate.getForObject(
-				"http://localhost:8081/service/rest/v1/components?repository=" + repository, ComponentsDTO.class);
+//		ComponentsDTO components = restTemplate.getForObject(
+//				"http://localhost:8081/service/rest/v1/components?repository=" + repository, ComponentsDTO.class);
 		LOG.info("Initial getForObject" + repository);
 
 		this.crawlRepository(repository, null);
@@ -84,9 +84,6 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 	}
 
 	public void crawlRepository(final String repository, final String continuationToken) {
-//		ComponentsDTO quote = restTemplate.getForObject(
-//				"http://localhost:8081/service/rest/v1/components?repository=maven-releases", ComponentsDTO.class);
-
 		String ct = "";
 		if (!StringUtils.isBlank(continuationToken)) {
 			ct = String.format("continuationToken=%s%s", continuationToken, "&");
@@ -107,7 +104,7 @@ public class NexusV1Client implements ArtifactRepositoryClient {
 					++counter;
 					Pom pom = this.download(adto);
 					checkForInheritedValues(pom);
-					LOG.info("POM DLd");
+					// LOG.info("POM DLd");
 					depInsightClient.save(pom);
 				}
 			}
